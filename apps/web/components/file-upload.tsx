@@ -29,7 +29,9 @@ export function FileUpload({ dialect, onResult }: FileUploadProps) {
       setFileName(file.name)
 
       if (file.size > MAX_BYTES) {
-        setError(`حجم الملف يتجاوز الحد المسموح (50MB). حجم ملفك ${Math.round(file.size / 1024 / 1024)}MB.`)
+        setError(
+          `حجم الملف يتجاوز الحد المسموح (50MB). حجم ملفك ${Math.round(file.size / 1024 / 1024)}MB.`,
+        )
         setState('failed')
         return
       }

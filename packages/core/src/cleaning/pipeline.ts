@@ -76,9 +76,7 @@ export function cleanPartial(raw: string, dialect: DialectDefinition): string {
   const normalized = normalizeArabic(raw, dialect)
   const { text } = stripFillers(normalized, dialect)
   const { text: collapsed } = collapseRepeats(text)
-  return collapsed
-    .replace(/^[\s،؛,.…]+/u, '')
-    .replace(/[ \t]{2,}/gu, ' ')
+  return collapsed.replace(/^[\s،؛,.…]+/u, '').replace(/[ \t]{2,}/gu, ' ')
 }
 
 export interface CleanedTranscript {

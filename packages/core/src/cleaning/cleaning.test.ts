@@ -298,10 +298,7 @@ describe('cleanTranscript — تفريغ كامل', () => {
   })
 
   it('يتعامل مع تفريغ بلا طوابع زمنية', () => {
-    const result = cleanTranscript(
-      { text: 'اه أنا رحت', words: [], durationMs: 900 },
-      gulfBahraini,
-    )
+    const result = cleanTranscript({ text: 'اه أنا رحت', words: [], durationMs: 900 }, gulfBahraini)
     expect(result.segments).toHaveLength(1)
     expect(result.segments[0]?.clean).toBe('أنا رحت')
   })

@@ -1,0 +1,58 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      POSTGRES_DB: arabic_v2t
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U postgres']
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    # المنفذ مكشوف للتطوير المحلي فقط. احذف هذا السطر في الإنتاج:
+    # قاعدة البيانات لا يجب أن تكون بالغة من خارج الشبكة الداخلية.
+    ports:
+      - '5432:5432'
+
+  gateway:
+    build:
+      context: .
+      dockerfile: apps/gateway/Dockerfile
+    environment:
+      NODE_ENV: production
+      GATEWAY_PORT: 4000
+      GATEWAY_HOST: 0.0.0.0
+      STT_PROVIDER: ${STT_PROVIDER:-speechmatics}
+      SPEECHMATICS_API_KEY: ${SPEECHMATICS_API_KEY}
+      SPEECHMATICS_REGION: ${SPEECHMATICS_REGION:-eu2}
+      AUTH_SECRET: ${AUTH_SECRET:?AUTH_SECRET مطلوب — ولّده بـ openssl rand -base64 32}
+      ALLOWED_ORIGINS: ${ALLOWED_ORIGINS:-http://localhost:3000}
+      MAX_SESSION_MINUTES: ${MAX_SESSION_MINUTES:-15}
+      MAX_UPLOAD_MB: ${MAX_UPLOAD_MB:-50}
+      USER_MONTHLY_QUOTA_MINUTES: ${USER_MONTHLY_QUOTA_MINUTES:-60}
+      MAX_CONCURRENT_SESSIONS: ${MAX_CONCURRENT_SESSIONS:-2}
+    ports:
+      - '4000:4000'
+    restart: unless-stopped
+
+  web:
+    build:
+      context: .
+      dockerfile: apps/web/Dockerfile
+    environment:
+      NODE_ENV: production
+      DATABASE_URL: postgresql://postgres:${POSTGRES_PASSWORD:-postgres}@postgres:5432/arabic_v2t
+      AUTH_SECRET: ${AUTH_SECRET:?AUTH_SECRET مطلوب}
+      NEXT_PUBLIC_GATEWAY_URL: ${NEXT_PUBLIC_GATEWAY_URL:-ws://localhost:4000}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    ports:
+      - '3000:3000'
+    restart: unless-stopped
+
+volumes:
+  postgres-data:

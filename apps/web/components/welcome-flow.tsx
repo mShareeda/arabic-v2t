@@ -12,9 +12,7 @@ export function WelcomeFlow({ dialects }: { dialects: DialectSummary[] }) {
   return (
     <div className="flex flex-col gap-8">
       <div>
-        <h2 className="text-2xl font-semibold tracking-tight sm:text-3xl">
-          اختر لغتك ولهجتك
-        </h2>
+        <h2 className="text-2xl font-semibold tracking-tight sm:text-3xl">اختر لغتك ولهجتك</h2>
         <p className="mt-2 text-[var(--color-ink-muted)]">
           يضبط النظام محرك التعرّف على اللهجة المختارة، فتتحسّن دقة النص وأسلوب كتابته.
         </p>

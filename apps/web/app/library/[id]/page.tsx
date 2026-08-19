@@ -32,8 +32,8 @@ export default async function TranscriptPage({ params }: { params: Promise<{ id:
         </Link>
         <h1 className="mt-3 text-2xl font-bold tracking-tight sm:text-3xl">{transcript.title}</h1>
         <p className="mt-2 font-mono text-xs text-[var(--color-ink-faint)]">
-          {dialect?.label ?? transcript.dialectId} · {Math.round(transcript.durationMs / 1000)} ثانية
-          · {transcript.createdAt.toISOString().slice(0, 10)}
+          {dialect?.label ?? transcript.dialectId} · {Math.round(transcript.durationMs / 1000)}{' '}
+          ثانية · {transcript.createdAt.toISOString().slice(0, 10)}
         </p>
       </header>
 

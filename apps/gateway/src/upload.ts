@@ -34,8 +34,7 @@ export function registerUploadRoute(app: FastifyInstance, provider: Transcriptio
     }
 
     const body = request.body as
-      | { dialectId?: string; fileName?: string; audioBase64?: string }
-      | undefined
+      { dialectId?: string; fileName?: string; audioBase64?: string } | undefined
 
     const dialectId = body?.dialectId
     const audioBase64 = body?.audioBase64

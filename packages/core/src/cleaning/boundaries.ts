@@ -33,9 +33,7 @@ export function escapeRegExp(input: string): string {
  * حرف الحشو عادة، والمحرك ينقل هذا المدّ حرفيًا.
  */
 export function elongationTolerantPattern(word: string): string {
-  return [...word]
-    .map((char) => `${escapeRegExp(char)}+${TATWEEL}*`)
-    .join('')
+  return [...word].map((char) => `${escapeRegExp(char)}+${TATWEEL}*`).join('')
 }
 
 /**

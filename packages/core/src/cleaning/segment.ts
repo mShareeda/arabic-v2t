@@ -66,10 +66,12 @@ export function segmentWords(words: readonly Word[], paragraphGapMs: number): Ra
 
 /** يجمع كلمات المقطع في نص واحد بمسافات مضبوطة. */
 export function joinWords(words: readonly Word[]): string {
-  return words
-    .map((word) => word.text.trim())
-    .filter((text) => text.length > 0)
-    .join(' ')
-    // علامة الترقيم تلتصق بما قبلها
-    .replace(/\s+([،؛؟!:.…,;?])/gu, '$1')
+  return (
+    words
+      .map((word) => word.text.trim())
+      .filter((text) => text.length > 0)
+      .join(' ')
+      // علامة الترقيم تلتصق بما قبلها
+      .replace(/\s+([،؛؟!:.…,;?])/gu, '$1')
+  )
 }

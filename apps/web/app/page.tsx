@@ -14,8 +14,8 @@ export default function HomePage() {
         <p className="eyebrow">تفريغ صوتي باللهجات العربية</p>
         <h1 className="mt-4 text-5xl font-bold tracking-tight sm:text-7xl">صَوت</h1>
         <p className="mt-5 max-w-xl text-lg leading-relaxed text-[var(--color-ink-muted)] sm:text-xl">
-          يحوّل كلامك إلى نص مكتوب أثناء نطقه، باللهجة التي تتحدّث بها فعلًا — لا بالفصحى
-          المترجَمة. ويحذف كلمات الحشو والتلعثم تلقائيًا.
+          يحوّل كلامك إلى نص مكتوب أثناء نطقه، باللهجة التي تتحدّث بها فعلًا — لا بالفصحى المترجَمة.
+          ويحذف كلمات الحشو والتلعثم تلقائيًا.
         </p>
       </header>
 

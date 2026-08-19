@@ -81,9 +81,7 @@ export function TranscriptView({
         className="flex-1 overflow-y-auto py-6 text-lg leading-[2] sm:text-xl sm:leading-[2.1]"
       >
         {isEmpty ? (
-          <p className="text-[var(--color-ink-faint)]">
-            سيظهر النص هنا فور أن تبدأ بالكلام.
-          </p>
+          <p className="text-[var(--color-ink-faint)]">سيظهر النص هنا فور أن تبدأ بالكلام.</p>
         ) : null}
 
         {segments.map((segment) => (

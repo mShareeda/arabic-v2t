@@ -81,7 +81,8 @@ socket.on('message', (data) => {
     case 'done':
       console.log(`\nانتهت الجلسة — المدة ${message.durationMs}ms، المقاطع ${segmentCount}`)
       if (firstTextAt === null) console.error('لم يصل أي نص — تحقّق من إعداد المحرك')
-      else if (firstTextAt > 2000) console.warn(`تحذير: أول نص تأخّر ${firstTextAt}ms (الهدف < 2000ms)`)
+      else if (firstTextAt > 2000)
+        console.warn(`تحذير: أول نص تأخّر ${firstTextAt}ms (الهدف < 2000ms)`)
       else console.log('✓ أول نص ظهر ضمن الهدف (أقل من ثانيتين)')
       socket.close()
       break

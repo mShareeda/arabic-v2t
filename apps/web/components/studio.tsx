@@ -243,7 +243,11 @@ export function Studio({ dialect }: { dialect: DialectSummary }) {
           />
         ) : null}
 
-        <TranscriptActions segments={segments} dialectLabel={dialect.label} />
+        <TranscriptActions
+          segments={segments}
+          dialectLabel={dialect.label}
+          direction={dialect.direction}
+        />
 
         {savedId ? (
           <Link

@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { getSessionUser } from '@/lib/auth/session'
 import { LogoutButton } from './logout-button'
+import { ThemeToggle } from './theme-toggle'
 
 /** شريط تنقّل صغير — نص فقط بلا شعار ولا أيقونات، اتساقًا مع اللغة التحريرية. */
 export async function SiteNav() {
@@ -10,7 +11,10 @@ export async function SiteNav() {
     <nav className="flex items-center justify-end gap-5 text-sm">
       {user ? (
         <>
-          <Link href="/library" className="text-[var(--color-ink-muted)] hover:text-[var(--color-ink)]">
+          <Link
+            href="/library"
+            className="text-[var(--color-ink-muted)] hover:text-[var(--color-ink)]"
+          >
             سجل التفريغات
           </Link>
           <span className="font-mono text-xs text-[var(--color-ink-faint)]" dir="ltr">
@@ -20,7 +24,10 @@ export async function SiteNav() {
         </>
       ) : (
         <>
-          <Link href="/login" className="text-[var(--color-ink-muted)] hover:text-[var(--color-ink)]">
+          <Link
+            href="/login"
+            className="text-[var(--color-ink-muted)] hover:text-[var(--color-ink)]"
+          >
             دخول
           </Link>
           <Link href="/register" className="text-[var(--color-brass)] underline">
@@ -28,6 +35,7 @@ export async function SiteNav() {
           </Link>
         </>
       )}
+      <ThemeToggle />
     </nav>
   )
 }

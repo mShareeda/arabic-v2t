@@ -47,7 +47,8 @@ export class MicrophoneRecorder {
     // نطلب 16kHz لأنه ما يتوقّعه المحرك. بعض المتصفحات تتجاهل الطلب وتعطي
     // 48kHz، فنقرأ القيمة الفعلية ونبلّغ بها الخادم بدل افتراض ما طلبناه.
     const AudioContextClass =
-      window.AudioContext ?? (window as { webkitAudioContext?: typeof AudioContext }).webkitAudioContext
+      window.AudioContext ??
+      (window as { webkitAudioContext?: typeof AudioContext }).webkitAudioContext
 
     if (!AudioContextClass) {
       throw new Error('متصفحك لا يدعم Web Audio API')

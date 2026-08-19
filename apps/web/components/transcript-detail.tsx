@@ -30,9 +30,7 @@ export function TranscriptDetail({
 
   const editSegment = useCallback((segmentId: string, text: string) => {
     setSegments((previous) =>
-      previous.map((segment) =>
-        segment.id === segmentId ? { ...segment, clean: text } : segment,
-      ),
+      previous.map((segment) => (segment.id === segmentId ? { ...segment, clean: text } : segment)),
     )
     setSaveState('dirty')
   }, [])
@@ -93,7 +91,7 @@ export function TranscriptDetail({
           </button>
         ) : null}
 
-        <TranscriptActions segments={segments} dialectLabel={dialectLabel} />
+        <TranscriptActions segments={segments} dialectLabel={dialectLabel} direction={direction} />
 
         <button
           type="button"

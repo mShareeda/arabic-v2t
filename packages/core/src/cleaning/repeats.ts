@@ -69,9 +69,7 @@ export function collapseRepeatedWords(text: string): CollapseRepeatsResult {
 
   if (dropIndices.size === 0) return { text, removed: [] }
 
-  const kept = tokens
-    .map((token, index) => (dropIndices.has(index) ? '' : token))
-    .join('')
+  const kept = tokens.map((token, index) => (dropIndices.has(index) ? '' : token)).join('')
 
   return { text: kept, removed }
 }

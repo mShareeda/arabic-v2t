@@ -10,7 +10,14 @@ import { z } from 'zod'
 // ─────────────────────────────────────────────────────────────
 
 /** عائلة اللهجة — تُستخدم للتجميع في الواجهة ولمشاركة قوائم الحشو. */
-export const dialectFamilySchema = z.enum(['gulf', 'egyptian', 'levantine', 'maghrebi', 'msa', 'english'])
+export const dialectFamilySchema = z.enum([
+  'gulf',
+  'egyptian',
+  'levantine',
+  'maghrebi',
+  'msa',
+  'english',
+])
 export type DialectFamily = z.infer<typeof dialectFamilySchema>
 
 /** استبدال نصي يُطبَّق أثناء التطبيع، خاص بلهجة بعينها. */
@@ -179,7 +186,11 @@ export const serverMessageSchema = z.discriminatedUnion('type', [
     message: z.string(),
   }),
   /** تحذير قرب انتهاء المدة المسموحة للجلسة. */
-  z.object({ type: z.literal('warning'), code: z.literal('nearing_limit'), remainingMs: z.number() }),
+  z.object({
+    type: z.literal('warning'),
+    code: z.literal('nearing_limit'),
+    remainingMs: z.number(),
+  }),
   z.object({ type: z.literal('pong') }),
 ])
 export type ServerMessage = z.infer<typeof serverMessageSchema>
