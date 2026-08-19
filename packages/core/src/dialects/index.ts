@@ -30,7 +30,7 @@ const byId = new Map(dialects.map((d) => [d.id, d]))
 if (byId.size !== dialects.length) {
   const seen = new Set<string>()
   const duplicate = dialects.find((d) => (seen.has(d.id) ? true : (seen.add(d.id), false)))
-  throw new Error(`معرف لهجة مكرر في السجل: ${duplicate?.id}`)
+  throw new Error(`مُعرّف لهجة مكرر في السجل: ${duplicate?.id}`)
 }
 
 export function listDialects(): readonly DialectDefinition[] {
