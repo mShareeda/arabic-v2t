@@ -1,0 +1,63 @@
+// مخطط قاعدة البيانات — منصة التفريغ الصوتي
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String
+  name         String?
+  createdAt    DateTime @default(now())
+
+  transcripts  Transcript[]
+  usageRecords UsageRecord[]
+}
+
+enum TranscriptSource {
+  LIVE
+  UPLOAD
+}
+
+model Transcript {
+  id         String           @id @default(cuid())
+  userId     String
+  user       User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  dialectId  String
+  title      String
+  durationMs Int
+  source     TranscriptSource
+
+  /// النص الخام كما ورد من المحرك — لا يُتلف أبدًا، ليستطيع المستخدم الرجوع إليه
+  rawText    String
+  /// النص بعد التنظيف، وهو ما يُعرض افتراضيًا وما يعدّله المستخدم
+  cleanText  String
+  /// المقاطع بطوابعها الزمنية وقائمة ما حُذف من كل مقطع
+  segments   Json
+
+  createdAt  DateTime         @default(now())
+  updatedAt  DateTime         @updatedAt
+
+  // الاستعلام الغالب: تفريغات مستخدم واحد، الأحدث أولًا
+  @@index([userId, createdAt])
+}
+
+/// تتبّع الدقائق المستهلكة لفرض الحصة الشهرية ومراقبة التكلفة
+model UsageRecord {
+  id         String   @id @default(cuid())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  durationMs Int
+  provider   String
+  createdAt  DateTime @default(now())
+
+  @@index([userId, createdAt])
+}

@@ -1,13 +1,16 @@
 import { getDialectSummaries } from '@/lib/dialect-summary'
 import { WelcomeFlow } from '@/components/welcome-flow'
+import { SiteNav } from '@/components/site-nav'
 
 export default function HomePage() {
   const dialects = getDialectSummaries()
 
   return (
-    <main className="mx-auto min-h-dvh max-w-5xl px-5 py-12 sm:px-8 sm:py-20">
+    <main className="mx-auto min-h-dvh max-w-5xl px-5 py-8 sm:px-8 sm:py-12">
+      <SiteNav />
+
       {/* ترويسة تحريرية: خط شعري، ترقيم أقسام، بلا شعار ولا أيقونة مساعد */}
-      <header className="border-b border-[var(--color-ink)] pb-6">
+      <header className="mt-8 border-b border-[var(--color-ink)] pb-6">
         <p className="eyebrow">تفريغ صوتي باللهجات العربية</p>
         <h1 className="mt-4 text-5xl font-bold tracking-tight sm:text-7xl">صَوت</h1>
         <p className="mt-5 max-w-xl text-lg leading-relaxed text-[var(--color-ink-muted)] sm:text-xl">

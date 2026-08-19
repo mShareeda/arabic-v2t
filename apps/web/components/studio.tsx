@@ -11,6 +11,23 @@ import { TranscriptActions } from './transcript-actions'
 
 type Status = 'idle' | 'connecting' | 'recording' | 'finishing' | 'done'
 
+/**
+ * يطلب تذكرة قصيرة العمر للدخول إلى الـ gateway.
+ *
+ * يعيد null حين لا توجد جلسة — ويبقى ذلك صالحًا في وضع التطوير حيث تكون
+ * المصادقة معطّلة على الـ gateway، فلا يُجبَر المطوّر على إنشاء حساب.
+ */
+async function fetchGatewayTicket(): Promise<string | null> {
+  try {
+    const response = await fetch('/api/gateway-ticket', { method: 'POST' })
+    if (!response.ok) return null
+    const payload = (await response.json()) as { ticket?: string }
+    return payload.ticket ?? null
+  } catch {
+    return null
+  }
+}
+
 const STATUS_LABEL: Record<Status, string> = {
   idle: 'جاهز',
   connecting: 'جارٍ الاتصال…',
@@ -19,7 +36,13 @@ const STATUS_LABEL: Record<Status, string> = {
   done: 'انتهى',
 }
 
-export function Studio({ dialect }: { dialect: DialectSummary }) {
+export function Studio({
+  dialect,
+  isAuthenticated,
+}: {
+  dialect: DialectSummary
+  isAuthenticated: boolean
+}) {
   const [status, setStatus] = useState<Status>('idle')
   const [segments, setSegments] = useState<Segment[]>([])
   const [partial, setPartial] = useState('')
@@ -28,8 +51,13 @@ export function Studio({ dialect }: { dialect: DialectSummary }) {
   const [notice, setNotice] = useState<string | null>(null)
   const [elapsedMs, setElapsedMs] = useState(0)
 
+  const [savedId, setSavedId] = useState<string | null>(null)
+
   const sessionRef = useRef<LiveSession | null>(null)
   const startedAtRef = useRef(0)
+  // نقرأ المقاطع من مرجع لا من الحالة: `onDone` تُلتقط داخل مغلَّف أُنشئ
+  // عند بدء الجلسة، فقيمة الحالة فيه تبقى مجمّدة على ما كانت وقت الإنشاء
+  const segmentsRef = useRef<Segment[]>([])
 
   // عدّاد المدة — يبيّن للمستخدم كم استهلك من حصته
   useEffect(() => {
@@ -45,12 +73,43 @@ export function Studio({ dialect }: { dialect: DialectSummary }) {
     }
   }, [])
 
+  /** يحفظ التفريغ في سجل المستخدم بعد انتهاء الجلسة. */
+  const persist = useCallback(
+    async (durationMs: number): Promise<void> => {
+      if (!isAuthenticated || segmentsRef.current.length === 0) return
+
+      try {
+        const response = await fetch('/api/transcripts', {
+          method: 'POST',
+          headers: { 'content-type': 'application/json' },
+          body: JSON.stringify({
+            dialectId: dialect.id,
+            durationMs,
+            source: 'LIVE',
+            segments: segmentsRef.current,
+          }),
+        })
+        if (!response.ok) return
+        const payload = (await response.json()) as { id?: string }
+        setSavedId(payload.id ?? null)
+      } catch {
+        // فشل الحفظ لا يفقد المستخدم نصه — النص أمامه على الشاشة وقابل للتنزيل
+        setNotice('تعذّر حفظ التفريغ في السجل. يمكنك تنزيله من هنا.')
+      }
+    },
+    [dialect.id, isAuthenticated],
+  )
+
   const start = useCallback(async () => {
     setError(null)
     setNotice(null)
     setSegments([])
+    setSavedId(null)
     setPartial('')
+    segmentsRef.current = []
     setStatus('connecting')
+
+    const ticket = await fetchGatewayTicket()
 
     const session = new LiveSession({
       onReady: () => {
@@ -59,7 +118,8 @@ export function Studio({ dialect }: { dialect: DialectSummary }) {
       },
       onPartial: setPartial,
       onSegment: (segment) => {
-        setSegments((previous) => [...previous, segment])
+        segmentsRef.current = [...segmentsRef.current, segment]
+        setSegments(segmentsRef.current)
         // المقطع تثبّت، فالنص الجزئي الذي كان يمثّله لم يعد له معنى
         setPartial('')
       },
@@ -67,10 +127,11 @@ export function Studio({ dialect }: { dialect: DialectSummary }) {
       onWarning: (remainingMs) => {
         setNotice(`تبقّى ${Math.round(remainingMs / 60_000)} دقيقة قبل انتهاء مدة الجلسة.`)
       },
-      onDone: () => {
+      onDone: ({ durationMs }) => {
         setStatus('done')
         setPartial('')
         setPeak(0)
+        void persist(durationMs)
       },
       onError: (message) => {
         setError(message)
@@ -80,8 +141,8 @@ export function Studio({ dialect }: { dialect: DialectSummary }) {
     })
 
     sessionRef.current = session
-    await session.start(dialect.id, null)
-  }, [dialect.id])
+    await session.start(dialect.id, ticket)
+  }, [dialect.id, persist])
 
   const stop = useCallback(async () => {
     setStatus('finishing')
@@ -89,9 +150,10 @@ export function Studio({ dialect }: { dialect: DialectSummary }) {
   }, [])
 
   const editSegment = useCallback((id: string, text: string) => {
-    setSegments((previous) =>
-      previous.map((segment) => (segment.id === id ? { ...segment, clean: text } : segment)),
+    segmentsRef.current = segmentsRef.current.map((segment) =>
+      segment.id === id ? { ...segment, clean: text } : segment,
     )
+    setSegments(segmentsRef.current)
   }, [])
 
   const isRecording = status === 'recording' || status === 'connecting'
@@ -175,6 +237,15 @@ export function Studio({ dialect }: { dialect: DialectSummary }) {
         )}
 
         <TranscriptActions segments={segments} dialectLabel={dialect.label} />
+
+        {savedId ? (
+          <Link
+            href={`/library/${savedId}`}
+            className="ms-auto text-sm text-[var(--color-brass)] underline"
+          >
+            حُفظ في السجل ←
+          </Link>
+        ) : null}
       </div>
     </main>
   )
