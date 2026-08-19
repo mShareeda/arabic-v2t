@@ -1,0 +1,145 @@
+@import 'tailwindcss';
+
+/* ─────────────────────────────────────────────────────────────
+   نظام التصميم — «لؤلؤ وحبر»
+
+   الاتجاه: لغة تحريرية مطبوعة، أقرب لمجلة أنيقة منها لتطبيق ذكاء اصطناعي.
+   ممنوع صراحة: التدرّجات البنفسجية/الزرقاء، الظلال الناعمة، الأزرار البيضاوية،
+   الفقاعات المستديرة، وأيقونات الروبوت.
+   المسموح: ألوان مسطّحة، خطوط شعرية، زوايا حادة، وشبكة غير متماثلة.
+   ───────────────────────────────────────────────────────────── */
+
+@theme {
+  /* ── اللوحة: فاتح ── */
+  --color-paper: #f4f1ea;
+  --color-paper-raised: #ebe6db;
+  --color-ink: #12100e;
+  --color-ink-muted: #5c564d;
+  --color-ink-faint: #8f887c;
+  --color-rule: #d6cfc0;
+
+  /* النحاسي — لون الفعل والتمييز، مستوحى من مراكب اللؤلؤ */
+  --color-brass: #c8892a;
+  --color-brass-deep: #a06d1c;
+
+  /* الأخضر المكتوم — الحالات الثانوية والنجاح */
+  --color-verdigris: #2f5d57;
+
+  /* المرجاني — التسجيل والتنبيه فقط، لا يُستخدم للزينة */
+  --color-coral: #d2543c;
+
+  /* ── الخطوط ── */
+  --font-sans:
+    'IBM Plex Sans Arabic', 'IBM Plex Sans', ui-sans-serif, system-ui, -apple-system, 'Segoe UI',
+    sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+
+  /* ── نصف الأقطار: حادّة عمدًا ── */
+  --radius-sharp: 2px;
+  --radius-card: 3px;
+}
+
+/* الوضع الداكن — الحبر يصبح الأرضية، واللؤلؤ يصبح النص */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    --color-paper: #12100e;
+    --color-paper-raised: #1c1916;
+    --color-ink: #f4f1ea;
+    --color-ink-muted: #a29a8c;
+    --color-ink-faint: #6f6759;
+    --color-rule: #302b25;
+    --color-brass: #e0a544;
+    --color-brass-deep: #c8892a;
+    --color-verdigris: #4a8079;
+    --color-coral: #e86b52;
+  }
+}
+
+:root[data-theme='dark'] {
+  --color-paper: #12100e;
+  --color-paper-raised: #1c1916;
+  --color-ink: #f4f1ea;
+  --color-ink-muted: #a29a8c;
+  --color-ink-faint: #6f6759;
+  --color-rule: #302b25;
+  --color-brass: #e0a544;
+  --color-brass-deep: #c8892a;
+  --color-verdigris: #4a8079;
+  --color-coral: #e86b52;
+}
+
+@layer base {
+  * {
+    border-color: var(--color-rule);
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background-color: var(--color-paper);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    font-feature-settings: 'kern', 'liga';
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  /* ترقيم الأقسام كفهرس كتاب — جزء أساسي من اللغة البصرية */
+  .section-index {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    letter-spacing: 0.18em;
+    color: var(--color-ink-faint);
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* عنوان صغير فوق القسم، بخط شعري تحته */
+  .eyebrow {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--color-ink-faint);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-brass);
+    outline-offset: 2px;
+  }
+
+  ::selection {
+    background-color: var(--color-brass);
+    color: var(--color-paper);
+  }
+}
+
+/* النص الجزئي غير المستقر: حبر أفتح وتسطير خفيف يختفي عند التثبيت */
+.partial-text {
+  color: var(--color-ink-faint);
+  text-decoration: underline;
+  text-decoration-style: dotted;
+  text-decoration-color: var(--color-rule);
+  text-underline-offset: 5px;
+}
+
+/* ظهور المقطع المثبَّت — حركة واحدة قصيرة، بلا انزلاق مسرحي */
+@keyframes ink-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.segment-enter {
+  animation: ink-in 260ms ease-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .segment-enter {
+    animation: none;
+  }
+}
