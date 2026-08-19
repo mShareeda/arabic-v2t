@@ -28,11 +28,11 @@
   /* المرجاني — التسجيل والتنبيه فقط، لا يُستخدم للزينة */
   --color-coral: #d2543c;
 
-  /* ── الخطوط ── */
+  /* ── الخط ──
+     خط واحد للتطبيق كله: Alexandria، عائلة متغيّرة تغطي العربية واللاتينية.
+     المتغيّر --font-alexandria يعرّفه next/font على عنصر <html>. */
   --font-sans:
-    'IBM Plex Sans Arabic', 'IBM Plex Sans', ui-sans-serif, system-ui, -apple-system, 'Segoe UI',
-    sans-serif;
-  --font-mono: 'IBM Plex Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+    var(--font-alexandria), ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
 
   /* ── نصف الأقطار: حادّة عمدًا ── */
   --radius-sharp: 2px;
@@ -86,10 +86,12 @@
     text-rendering: optimizeLegibility;
   }
 
-  /* ترقيم الأقسام كفهرس كتاب — جزء أساسي من اللغة البصرية */
+  /* ترقيم الأقسام كفهرس كتاب — جزء أساسي من اللغة البصرية.
+     بعد توحيد الخط، تباعُد الحروف والوزن الخفيف هما ما يميّزان هذا السطر
+     عن نص المتن، بدل اختلاف عائلة الخط. */
   .section-index {
-    font-family: var(--font-mono);
     font-size: 0.6875rem;
+    font-weight: 400;
     letter-spacing: 0.18em;
     color: var(--color-ink-faint);
     font-variant-numeric: tabular-nums;
@@ -97,11 +99,18 @@
 
   /* عنوان صغير فوق القسم، بخط شعري تحته */
   .eyebrow {
-    font-family: var(--font-mono);
     font-size: 0.6875rem;
+    font-weight: 400;
     letter-spacing: 0.2em;
     text-transform: uppercase;
     color: var(--color-ink-faint);
+  }
+
+  /* بيانات وصفية: مدد، تواريخ، عدّادات. أرقام متساوية العرض حتى لا
+     يتراقص العدّاد كلما تغيّر رقم أثناء التسجيل. */
+  .meta {
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.01em;
   }
 
   :focus-visible {

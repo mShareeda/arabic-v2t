@@ -166,7 +166,7 @@ export function Studio({ dialect }: { dialect: DialectSummary }) {
           <h1 className="mt-3 text-3xl font-bold tracking-tight sm:text-4xl">{dialect.label}</h1>
         </div>
 
-        <div className="flex items-center gap-3 font-mono text-sm">
+        <div className="meta flex items-center gap-3 text-sm">
           <span
             aria-hidden="true"
             className="inline-block h-2 w-2"

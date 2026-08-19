@@ -17,7 +17,7 @@ export async function SiteNav() {
           >
             سجل التفريغات
           </Link>
-          <span className="font-mono text-xs text-[var(--color-ink-faint)]" dir="ltr">
+          <span className="text-xs text-[var(--color-ink-faint)]" dir="ltr">
             {user.email}
           </span>
           <LogoutButton />

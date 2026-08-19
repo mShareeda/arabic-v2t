@@ -42,7 +42,7 @@ export function ThemeToggle() {
       type="button"
       onClick={() => setTheme(NEXT[theme])}
       aria-label={`السمة: ${LABEL[theme]} — اضغط للتبديل`}
-      className="font-mono text-xs text-[var(--color-ink-faint)] hover:text-[var(--color-ink)]"
+      className="text-xs text-[var(--color-ink-faint)] hover:text-[var(--color-ink)]"
     >
       {/* حتى يكتمل التركيب لا نعرف اختيار المستخدم المخزّن، فنعرض نصًا محايدًا
           بدل قيمة خاطئة تومض ثم تتغيّر */}

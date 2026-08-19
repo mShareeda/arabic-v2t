@@ -37,7 +37,7 @@ export default async function LibraryPage() {
           </Link>
           <h1 className="mt-3 text-3xl font-bold tracking-tight sm:text-4xl">سجل التفريغات</h1>
         </div>
-        <span className="font-mono text-sm text-[var(--color-ink-faint)]">
+        <span className="meta text-sm text-[var(--color-ink-faint)]">
           {transcripts.length} تفريغ
         </span>
       </header>
@@ -67,18 +67,18 @@ export default async function LibraryPage() {
 
                   <span className="min-w-0 flex-1 truncate text-lg">{transcript.title}</span>
 
-                  <span className="font-mono text-xs text-[var(--color-ink-faint)]">
+                  <span className="text-xs text-[var(--color-ink-faint)]">
                     {dialect?.label ?? transcript.dialectId}
                   </span>
-                  <span className="font-mono text-xs tabular-nums text-[var(--color-ink-faint)]">
+                  <span className="meta text-xs text-[var(--color-ink-faint)]">
                     {formatDuration(transcript.durationMs)}
                   </span>
-                  <span className="font-mono text-xs text-[var(--color-ink-faint)]">
+                  <span className="text-xs text-[var(--color-ink-faint)]">
                     {transcript.source === 'LIVE' ? 'حي' : 'ملف'}
                   </span>
                   <time
                     dateTime={transcript.createdAt.toISOString()}
-                    className="font-mono text-xs text-[var(--color-ink-faint)]"
+                    className="meta text-xs text-[var(--color-ink-faint)]"
                   >
                     {transcript.createdAt.toISOString().slice(0, 10)}
                   </time>
