@@ -71,7 +71,7 @@ export function TranscriptActions({
   return (
     <div className="flex flex-wrap items-center gap-2">
       <button type="button" onClick={() => void copy()} className={buttonClass}>
-        {copied ? 'نُسخ ✓' : 'نسخ'}
+        {copied ? 'نسخ ✓' : 'نسخ'}
       </button>
 
       <button
@@ -96,7 +96,7 @@ export function TranscriptActions({
         onClick={() => void downloadDocx()}
         className={`${buttonClass} disabled:opacity-50`}
       >
-        {exporting ? 'جارٍ التجهيز…' : 'تنزيل Word'}
+        {exporting ? 'جاري التجهيز…' : 'تنزيل Word'}
       </button>
     </div>
   )

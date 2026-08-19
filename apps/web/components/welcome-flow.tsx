@@ -14,7 +14,7 @@ export function WelcomeFlow({ dialects }: { dialects: DialectSummary[] }) {
       <div>
         <h2 className="text-2xl font-semibold tracking-tight sm:text-3xl">اختر لغتك ولهجتك</h2>
         <p className="mt-2 text-[var(--color-ink-muted)]">
-          يضبط النظام محرك التعرّف على اللهجة المختارة، فتتحسّن دقة النص وأسلوب كتابته.
+          يضبط النظام محرك التعرف على اللهجة المختارة، فتتحسن دقة النص وأسلوب كتابته.
         </p>
       </div>
 

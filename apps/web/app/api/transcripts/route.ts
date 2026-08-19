@@ -21,7 +21,7 @@ function deriveTitle(text: string, dialectLabel: string): string {
 
 export async function GET() {
   const user = await getSessionUser()
-  if (!user) return NextResponse.json({ error: 'غير مصرّح' }, { status: 401 })
+  if (!user) return NextResponse.json({ error: 'غير مصرح' }, { status: 401 })
 
   const transcripts = await prisma.transcript.findMany({
     where: { userId: user.id },
@@ -44,7 +44,7 @@ export async function GET() {
 
 export async function POST(request: Request) {
   const user = await getSessionUser()
-  if (!user) return NextResponse.json({ error: 'غير مصرّح' }, { status: 401 })
+  if (!user) return NextResponse.json({ error: 'غير مصرح' }, { status: 401 })
 
   const parsed = createSchema.safeParse(await request.json().catch(() => null))
   if (!parsed.success) {

@@ -1,5 +1,5 @@
 import type { DialectDefinition } from '../types.js'
-import { gulfBahraini } from './gulf-bh.js'
+import { gulf } from './gulf.js'
 import { egyptian } from './egyptian.js'
 import { modernStandardArabic } from './msa.js'
 import { english } from './english.js'
@@ -9,7 +9,7 @@ import { english } from './english.js'
  * │  سجل اللهجات — نقطة التوسّع الوحيدة في المشروع            │
  * │                                                          │
  * │  لإضافة لهجة جديدة:                                       │
- * │    ١. أنشئ ملفًا في هذا المجلد (انظر gulf-bh.ts كمثال)     │
+ * │    ١. أنشئ ملفًا في هذا المجلد (انظر gulf.ts كمثال)     │
  * │    ٢. استورده وأضفه إلى المصفوفة أدناه                     │
  * │                                                          │
  * │  لا شيء آخر. بطاقات الاختيار في الواجهة، وإعداد المحرك،    │
@@ -17,7 +17,7 @@ import { english } from './english.js'
  * └──────────────────────────────────────────────────────────┘
  */
 export const dialects: readonly DialectDefinition[] = [
-  gulfBahraini,
+  gulf,
   egyptian,
   modernStandardArabic,
   english,
@@ -30,7 +30,7 @@ const byId = new Map(dialects.map((d) => [d.id, d]))
 if (byId.size !== dialects.length) {
   const seen = new Set<string>()
   const duplicate = dialects.find((d) => (seen.has(d.id) ? true : (seen.add(d.id), false)))
-  throw new Error(`مُعرّف لهجة مكرر في السجل: ${duplicate?.id}`)
+  throw new Error(`معرف لهجة مكرر في السجل: ${duplicate?.id}`)
 }
 
 export function listDialects(): readonly DialectDefinition[] {
@@ -62,4 +62,4 @@ export function groupDialectsByFamily(): Map<string, DialectDefinition[]> {
   return groups
 }
 
-export { gulfBahraini, egyptian, modernStandardArabic, english }
+export { gulf, egyptian, modernStandardArabic, english }

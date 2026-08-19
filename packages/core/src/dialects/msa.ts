@@ -30,7 +30,7 @@ export const modernStandardArabic: DialectDefinition = {
     },
     whisper: {
       language: 'ar',
-      initialPrompt: 'نص باللغة العربية الفصحى الحديثة، بأسلوب رسمي ومنقّح.',
+      initialPrompt: 'نص باللغة العربية الفصحى الحديثة، بأسلوب رسمي ومنقح.',
     },
   },
 

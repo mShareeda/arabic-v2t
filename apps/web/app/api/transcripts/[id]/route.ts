@@ -13,7 +13,7 @@ type Params = { params: Promise<{ id: string }> }
 
 export async function GET(_request: Request, { params }: Params) {
   const user = await getSessionUser()
-  if (!user) return NextResponse.json({ error: 'غير مصرّح' }, { status: 401 })
+  if (!user) return NextResponse.json({ error: 'غير مصرح' }, { status: 401 })
 
   const { id } = await params
 
@@ -29,7 +29,7 @@ export async function GET(_request: Request, { params }: Params) {
 
 export async function PATCH(request: Request, { params }: Params) {
   const user = await getSessionUser()
-  if (!user) return NextResponse.json({ error: 'غير مصرّح' }, { status: 401 })
+  if (!user) return NextResponse.json({ error: 'غير مصرح' }, { status: 401 })
 
   const { id } = await params
   const parsed = updateSchema.safeParse(await request.json().catch(() => null))
@@ -61,7 +61,7 @@ export async function PATCH(request: Request, { params }: Params) {
 
 export async function DELETE(_request: Request, { params }: Params) {
   const user = await getSessionUser()
-  if (!user) return NextResponse.json({ error: 'غير مصرّح' }, { status: 401 })
+  if (!user) return NextResponse.json({ error: 'غير مصرح' }, { status: 401 })
 
   const { id } = await params
   const result = await prisma.transcript.deleteMany({ where: { id, userId: user.id } })

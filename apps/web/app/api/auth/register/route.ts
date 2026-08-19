@@ -23,7 +23,7 @@ export async function POST(request: Request) {
 
   const existing = await prisma.user.findUnique({ where: { email }, select: { id: true } })
   if (existing) {
-    return NextResponse.json({ error: 'هذا البريد مسجّل مسبقًا' }, { status: 409 })
+    return NextResponse.json({ error: 'هذا البريد مسجل مسبقا' }, { status: 409 })
   }
 
   const user = await prisma.user.create({

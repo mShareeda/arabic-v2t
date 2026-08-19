@@ -17,17 +17,17 @@ const GATEWAY_URL = process.env.NEXT_PUBLIC_GATEWAY_URL ?? 'ws://localhost:4000'
 function describeError(message: Extract<ServerMessage, { type: 'error' }>): string {
   switch (message.code) {
     case 'unauthorized':
-      return 'انتهت جلستك. سجّل الدخول مرة أخرى.'
+      return 'انتهت جلستك. سجل الدخول مرة أخرى.'
     case 'quota_exceeded':
       return 'انتهت حصتك الشهرية من دقائق التفريغ.'
     case 'session_limit':
       return 'لديك جلسة تفريغ أخرى مفتوحة. أغلقها ثم أعد المحاولة.'
     case 'session_too_long':
-      return 'انتهت المدة القصوى المسموحة للتسجيل، وحُفظ ما فُرِّغ حتى الآن.'
+      return 'انتهت المدة القصوى المسموحة للتسجيل، وحفظ ما فرغ حتى الآن.'
     case 'unknown_dialect':
       return 'اللهجة المختارة غير متاحة.'
     case 'provider_error':
-      return `تعذّر الوصول لمحرك التفريغ: ${message.message}`
+      return `تعذر الوصول لمحرك التفريغ: ${message.message}`
     default:
       return message.message
   }
@@ -68,8 +68,8 @@ export class LiveSession {
     } catch (error) {
       this.handlers.onError(
         error instanceof DOMException && error.name === 'NotAllowedError'
-          ? 'لم يُسمح باستخدام الميكروفون. فعّل الإذن من إعدادات المتصفح.'
-          : 'تعذّر الوصول إلى الميكروفون.',
+          ? 'لم يسمح باستخدام الميكروفون. فعل الإذن من إعدادات المتصفح.'
+          : 'تعذر الوصول إلى الميكروفون.',
       )
       return
     }

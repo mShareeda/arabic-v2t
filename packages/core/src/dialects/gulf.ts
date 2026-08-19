@@ -2,21 +2,21 @@ import type { DialectDefinition } from '../types.js'
 import { wordRegex } from '../cleaning/boundaries.js'
 
 /**
- * اللهجة البحرينية/الخليجية.
+ * اللهجة الخليجية.
  *
  * ملاحظة على المحرك: Speechmatics يستخدم نموذجًا عربيًا واحدًا (`ar`) يغطي
  * الخليجي والمصري والشامي والمغاربي، ولا يعطي رمزًا منفصلًا لكل لهجة.
  * لذلك التخصيص هنا يمر عبر ثلاث قنوات: المفردات المحلية (additionalVocab)،
  * وقائمة كلمات الحشو، وقواعد التطبيع.
  */
-export const gulfBahraini: DialectDefinition = {
+export const gulf: DialectDefinition = {
   id: 'ar-BH',
-  label: 'البحرينية / الخليجية',
-  description: 'البحرين، السعودية، الإمارات، الكويت، قطر، عُمان',
+  label: 'الخليجية',
+  description: 'البحرين، السعودية، الإمارات، الكويت، قطر، عمان',
   sample: 'شلونك؟ شخبارك اليوم؟',
   family: 'gulf',
   direction: 'rtl',
-  flag: '🇧🇭',
+  flag: null,
 
   engine: {
     speechmatics: {
@@ -65,7 +65,7 @@ export const gulfBahraini: DialectDefinition = {
     },
     whisper: {
       language: 'ar',
-      initialPrompt: 'محادثة باللهجة الخليجية البحرينية العامية.',
+      initialPrompt: 'محادثة باللهجة الخليجية العامية.',
     },
   },
 

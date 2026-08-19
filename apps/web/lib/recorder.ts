@@ -72,7 +72,7 @@ export class MicrophoneRecorder {
     }
 
     this.worklet.onprocessorerror = () => {
-      handlers.onError(new Error('توقّف معالج الصوت بشكل غير متوقع'))
+      handlers.onError(new Error('توقف معالج الصوت بشكل غير متوقع'))
     }
 
     source.connect(this.worklet)

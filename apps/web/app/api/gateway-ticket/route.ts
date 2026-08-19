@@ -5,7 +5,7 @@ import { getSessionUser, mintGatewayTicket } from '@/lib/auth/session'
 export async function POST() {
   const user = await getSessionUser()
   if (!user) {
-    return NextResponse.json({ error: 'غير مصرّح' }, { status: 401 })
+    return NextResponse.json({ error: 'غير مصرح' }, { status: 401 })
   }
 
   return NextResponse.json({ ticket: await mintGatewayTicket(user) })

@@ -104,9 +104,9 @@ export function FileUpload({ dialect, onResult }: FileUploadProps) {
         className="border border-[var(--color-rule)] px-4 py-3 text-sm transition-colors hover:bg-[var(--color-paper-raised)] disabled:opacity-50"
       >
         {state === 'uploading'
-          ? 'جارٍ الرفع…'
+          ? 'جاري الرفع…'
           : state === 'processing'
-            ? `جارٍ تفريغ ${fileName ?? 'الملف'}…`
+            ? `جاري تفريغ ${fileName ?? 'الملف'}…`
             : 'رفع ملف صوتي'}
       </button>
 

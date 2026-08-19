@@ -42,7 +42,7 @@ export function TranscriptView({
           <span className="eyebrow">النص</span>
           {removedCount > 0 ? (
             <span className="text-xs text-[var(--color-ink-faint)]">
-              حُذفت {removedCount} كلمة حشو
+              حذفت {removedCount} كلمة حشو
             </span>
           ) : null}
         </div>
@@ -59,7 +59,7 @@ export function TranscriptView({
                   : 'text-[var(--color-ink-muted)] hover:bg-[var(--color-paper-raised)]'
               }`}
             >
-              منقّح
+              منقح
             </button>
             <button
               type="button"

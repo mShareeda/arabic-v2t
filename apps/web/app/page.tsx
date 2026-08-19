@@ -12,10 +12,10 @@ export default function HomePage() {
       {/* ترويسة تحريرية: خط شعري، ترقيم أقسام، بلا شعار ولا أيقونة مساعد */}
       <header className="mt-8 border-b border-[var(--color-ink)] pb-6">
         <p className="eyebrow">تفريغ صوتي باللهجات العربية</p>
-        <h1 className="mt-4 text-5xl font-bold tracking-tight sm:text-7xl">صَوت</h1>
+        <h1 className="mt-4 text-5xl font-bold tracking-tight sm:text-7xl">صوت</h1>
         <p className="mt-5 max-w-xl text-lg leading-relaxed text-[var(--color-ink-muted)] sm:text-xl">
-          يحوّل كلامك إلى نص مكتوب أثناء نطقه، باللهجة التي تتحدّث بها فعلًا — لا بالفصحى المترجَمة.
-          ويحذف كلمات الحشو والتلعثم تلقائيًا.
+          يحول كلامك إلى نص مكتوب أثناء نطقه، باللهجة التي تتحدث بها فعلا — لا بالفصحى المترجمة.
+          ويحذف كلمات الحشو والتلعثم تلقائيا.
         </p>
       </header>
 
@@ -28,7 +28,7 @@ export default function HomePage() {
       </div>
 
       <footer className="mt-20 flex flex-wrap items-center gap-x-6 gap-y-2 border-t border-[var(--color-rule)] pt-6 text-xs text-[var(--color-ink-faint)]">
-        <span>الصوت يُعالَج ولا يُخزَّن إلا بطلبك</span>
+        <span>الصوت يعالج ولا يخزن إلا بطلبك</span>
         <span>·</span>
         <span>يعمل على الجوال والحاسوب</span>
       </footer>

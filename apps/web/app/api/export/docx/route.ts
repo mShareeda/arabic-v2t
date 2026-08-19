@@ -18,7 +18,7 @@ const schema = z.object({
 
 export async function POST(request: Request) {
   const user = await getSessionUser()
-  if (!user) return NextResponse.json({ error: 'غير مصرّح' }, { status: 401 })
+  if (!user) return NextResponse.json({ error: 'غير مصرح' }, { status: 401 })
 
   const parsed = schema.safeParse(await request.json().catch(() => null))
   if (!parsed.success) {

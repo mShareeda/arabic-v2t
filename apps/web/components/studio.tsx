@@ -31,9 +31,9 @@ async function fetchGatewayTicket(): Promise<string | null> {
 
 const STATUS_LABEL: Record<Status, string> = {
   idle: 'جاهز',
-  connecting: 'جارٍ الاتصال…',
-  recording: 'يسجّل',
-  finishing: 'جارٍ الإنهاء…',
+  connecting: 'جاري الاتصال…',
+  recording: 'يسجل',
+  finishing: 'جاري الإنهاء…',
   done: 'انتهى',
 }
 
@@ -90,7 +90,7 @@ export function Studio({ dialect }: { dialect: DialectSummary }) {
         setSavedId(payload.id ?? null)
       } catch {
         // فشل الحفظ لا يفقد المستخدم نصه — النص أمامه على الشاشة وقابل للتنزيل
-        setNotice('تعذّر حفظ التفريغ في السجل. يمكنك تنزيله من هنا.')
+        setNotice('تعذر حفظ التفريغ في السجل. يمكنك تنزيله من هنا.')
       }
     },
     [dialect.id],
@@ -121,7 +121,7 @@ export function Studio({ dialect }: { dialect: DialectSummary }) {
       },
       onPeak: setPeak,
       onWarning: (remainingMs) => {
-        setNotice(`تبقّى ${Math.round(remainingMs / 60_000)} دقيقة قبل انتهاء مدة الجلسة.`)
+        setNotice(`تبقى ${Math.round(remainingMs / 60_000)} دقيقة قبل انتهاء مدة الجلسة.`)
       },
       onDone: ({ durationMs }) => {
         setStatus('done')
@@ -254,7 +254,7 @@ export function Studio({ dialect }: { dialect: DialectSummary }) {
             href={`/library/${savedId}`}
             className="ms-auto text-sm text-[var(--color-brass)] underline"
           >
-            حُفظ في السجل ←
+            حفظ في السجل ←
           </Link>
         ) : null}
       </div>

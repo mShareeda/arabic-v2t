@@ -22,6 +22,10 @@ function toWesternDigit(char: string): string {
  */
 export function normalizeArabic(text: string, dialect?: DialectDefinition): string {
   let output = text
+    // NFC أولًا: يدمج الهمزة المُركِّبة مع حرفها فتصير «ا + همزة فوق» حرف
+    // «أ» واحدًا. بهذا يصل النص إلى بقية الخطوات بشكل واحد مهما كان مصدره،
+    // وتتطابق المقارنات ومطابقة الأنماط بدل أن تفشل على شكل مكافئ بصريًا.
+    .normalize('NFC')
     .replace(TATWEEL, '')
     .replace(DIACRITICS, '')
     .replace(ARABIC_INDIC_DIGITS, toWesternDigit)

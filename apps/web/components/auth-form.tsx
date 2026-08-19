@@ -13,7 +13,7 @@ const COPY = {
     title: 'تسجيل الدخول',
     submit: 'دخول',
     switchText: 'ليس لديك حساب؟',
-    switchLink: 'أنشئ حسابًا',
+    switchLink: 'أنشئ حسابا',
     switchHref: '/register',
     endpoint: '/api/auth/login',
   },
@@ -21,7 +21,7 @@ const COPY = {
     title: 'حساب جديد',
     submit: 'إنشاء الحساب',
     switchText: 'لديك حساب بالفعل؟',
-    switchLink: 'سجّل الدخول',
+    switchLink: 'سجل الدخول',
     switchHref: '/login',
     endpoint: '/api/auth/register',
   },
@@ -50,14 +50,14 @@ export function AuthForm({ mode }: AuthFormProps) {
 
       if (!response.ok) {
         const payload = (await response.json().catch(() => null)) as { error?: string } | null
-        setError(payload?.error ?? 'تعذّر إتمام الطلب')
+        setError(payload?.error ?? 'تعذر إتمام الطلب')
         return
       }
 
       router.push('/')
       router.refresh()
     } catch {
-      setError('تعذّر الاتصال بالخادم')
+      setError('تعذر الاتصال بالخادم')
     } finally {
       setPending(false)
     }

@@ -50,7 +50,7 @@ export function TranscriptDetail({
   }, [id, segments])
 
   const remove = useCallback(async () => {
-    if (!window.confirm('حذف هذا التفريغ نهائيًا؟')) return
+    if (!window.confirm('حذف هذا التفريغ نهائيا؟')) return
     const response = await fetch(`/api/transcripts/${id}`, { method: 'DELETE' })
     if (response.ok) router.push('/library')
   }, [id, router])
@@ -82,9 +82,9 @@ export function TranscriptDetail({
             style={{ borderRadius: 'var(--radius-sharp)' }}
           >
             {saveState === 'saving'
-              ? 'جارٍ الحفظ…'
+              ? 'جاري الحفظ…'
               : saveState === 'saved'
-                ? 'حُفظ ✓'
+                ? 'حفظ ✓'
                 : saveState === 'failed'
                   ? 'فشل الحفظ — أعد المحاولة'
                   : 'حفظ التعديلات'}

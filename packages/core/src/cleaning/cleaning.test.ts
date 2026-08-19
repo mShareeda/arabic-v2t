@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { egyptian, english, gulfBahraini, modernStandardArabic } from '../dialects/index.js'
+import { egyptian, english, gulf, modernStandardArabic } from '../dialects/index.js'
 import { cleanPartial, cleanText, cleanTranscript } from './pipeline.js'
 import { collapseElongatedLetters, collapseRepeatedWords } from './repeats.js'
 import { stripFillers } from './fillers.js'
@@ -21,19 +21,60 @@ describe('normalizeArabic', () => {
     expect(normalizeArabic('أحمد إبراهيم آدم')).toBe('أحمد إبراهيم آدم')
   })
 
+  it('يحذف التنوين بأنواعه الثلاثة', () => {
+    expect(normalizeArabic('شكرًا جزيلاً كتابٌ كتابٍ')).toBe('شكرا جزيلا كتاب كتاب')
+  })
+
+  it('يحذف الشدة والسكون والألف الخنجرية', () => {
+    expect(normalizeArabic('مُدرِّسْ')).toBe('مدرس')
+    expect(normalizeArabic('هَٰذَا')).toBe('هذا')
+  })
+
+  // تراجع مُثبَّت: نطاق الحذف كان يشمل الهمزة المُركِّبة (0654/0655) والمدّة
+  // (0653)، فتنهار «أحمد» إلى «احمد» متى كُتبت بالشكل المُفكَّك — وهو شكل
+  // شرعي في يونيكود تخرجه بعض لوحات المفاتيح والمحركات.
+  describe('الهمزات لا تُحذف مع التشكيل', () => {
+    const decomposed = (text: string): string => text.normalize('NFD')
+
+    it('يُبقي همزة القطع فوق الألف المُفكَّكة', () => {
+      expect(normalizeArabic(decomposed('أحمد'))).toBe('أحمد')
+    })
+
+    it('يُبقي الهمزة تحت الألف المُفكَّكة', () => {
+      expect(normalizeArabic(decomposed('إبراهيم'))).toBe('إبراهيم')
+    })
+
+    it('يُبقي المدّة على الألف المُفكَّكة', () => {
+      expect(normalizeArabic(decomposed('آدم'))).toBe('آدم')
+    })
+
+    it('يُبقي الهمزة على الواو والياء المُفكَّكتين', () => {
+      expect(normalizeArabic(decomposed('مسؤول'))).toBe('مسؤول')
+      expect(normalizeArabic(decomposed('قائمة'))).toBe('قائمة')
+    })
+
+    it('يحذف التشكيل ويُبقي الهمزة في الكلمة نفسها', () => {
+      expect(normalizeArabic(decomposed('أَنَا مُتَأَكِّد'))).toBe('أنا متأكد')
+    })
+
+    it('يوحّد الشكل المُفكَّك والمركَّب في مخرج واحد', () => {
+      expect(normalizeArabic(decomposed('أنا'))).toBe(normalizeArabic('أنا'))
+    })
+  })
+
   it('يطبّق تصحيحات الهمزة الخاصة باللهجة', () => {
-    expect(normalizeArabic('انا رحت', gulfBahraini)).toBe('أنا رحت')
+    expect(normalizeArabic('انا رحت', gulf)).toBe('أنا رحت')
   })
 })
 
 describe('stripFillers', () => {
   it('يحذف كلمات الحشو الخليجية', () => {
-    const { text } = stripFillers('اه أنا امم رحت السوق', gulfBahraini)
+    const { text } = stripFillers('اه أنا امم رحت السوق', gulf)
     expect(text.replace(/\s+/g, ' ').trim()).toBe('أنا رحت السوق')
   })
 
   it('يحذف الحشو الممدود مهما طال', () => {
-    const { text } = stripFillers('اااااه رحت اممممم البيت', gulfBahraini)
+    const { text } = stripFillers('اااااه رحت اممممم البيت', gulf)
     expect(text.replace(/\s+/g, ' ').trim()).toBe('رحت البيت')
   })
 
@@ -43,33 +84,33 @@ describe('stripFillers', () => {
   })
 
   it('يسجّل ما حُذف مع سببه', () => {
-    const { removed } = stripFillers('اه أنا امم رحت', gulfBahraini)
+    const { removed } = stripFillers('اه أنا امم رحت', gulf)
     expect(removed.map((r) => r.text.trim())).toEqual(['اه', 'امم'])
     expect(removed.every((r) => r.reason === 'filler')).toBe(true)
   })
 
   it('لا يحذف كلمة تحتوي حروف الحشو ضمنها', () => {
     // «اهتمام» تبدأ بـ «اه» لكنها كلمة كاملة — الحدود العربية تمنع الحذف
-    const { text } = stripFillers('عندي اهتمام كبير', gulfBahraini)
+    const { text } = stripFillers('عندي اهتمام كبير', gulf)
     expect(text).toBe('عندي اهتمام كبير')
   })
 })
 
 describe('stripFillers — الاستثناءات السياقية', () => {
   it('يحذف «يعني» حين تكون حشوًا', () => {
-    const { text } = stripFillers('يعني أنا رحت السوق', gulfBahraini)
+    const { text } = stripFillers('يعني أنا رحت السوق', gulf)
     expect(text.replace(/\s+/g, ' ').trim()).toBe('أنا رحت السوق')
   })
 
   // تراجع مُثبَّت: النمط الحامي كان يطابق «أن» داخل «أنا»، فتنجو كل
   // «يعني أنا…» من الحذف رغم أنها حشو خالص.
   it('يحذف «يعني» قبل «أنا» ولا يخلط بينها وبين «أن»', () => {
-    const { text } = stripFillers('يعني أنا تعبت', gulfBahraini)
+    const { text } = stripFillers('يعني أنا تعبت', gulf)
     expect(text.replace(/\s+/g, ' ').trim()).toBe('أنا تعبت')
   })
 
   it('يُبقي «يعني» حين تكون فعلًا أصيلًا', () => {
-    const { text } = stripFillers('هذا يعني أن الأمر انتهى', gulfBahraini)
+    const { text } = stripFillers('هذا يعني أن الأمر انتهى', gulf)
     expect(text).toBe('هذا يعني أن الأمر انتهى')
   })
 
@@ -156,7 +197,7 @@ describe('localizePunctuation', () => {
 
 describe('cleanText — التمرير الكامل', () => {
   it('ينظّف جملة خليجية واقعية', () => {
-    const { clean } = cleanText('اه، يعني انا انا رحت امم للمنامة', gulfBahraini)
+    const { clean } = cleanText('اه، يعني انا انا رحت امم للمنامة', gulf)
     expect(clean).toBe('أنا رحت للمنامة')
   })
 
@@ -172,12 +213,12 @@ describe('cleanText — التمرير الكامل', () => {
 
   it('يحفظ النص الخام دون تعديل — لا نتلف البيانات الأصلية أبدًا', () => {
     const input = 'اه، يعني انا رحت'
-    const { raw } = cleanText(input, gulfBahraini)
+    const { raw } = cleanText(input, gulf)
     expect(raw).toBe(input)
   })
 
   it('يحترم تعطيل خطوات التنظيف', () => {
-    const { clean } = cleanText('اه أنا رحت', gulfBahraini, {
+    const { clean } = cleanText('اه أنا رحت', gulf, {
       normalizeText: false,
       removeFillers: false,
       collapseRepeats: false,
@@ -196,20 +237,20 @@ describe('cleanText — التمرير الكامل', () => {
 
 describe('cleanPartial — التمرير السريع للنص الحي', () => {
   it('يحذف الحشو دون انتظار تثبيت الجملة', () => {
-    expect(cleanPartial('اه أنا رحت', gulfBahraini).trim()).toBe('أنا رحت')
+    expect(cleanPartial('اه أنا رحت', gulf).trim()).toBe('أنا رحت')
   })
 
   it('لا يقصّ المسافة النهائية — الجملة ما زالت قيد الكتابة', () => {
-    expect(cleanPartial('أنا رحت ', gulfBahraini)).toBe('أنا رحت ')
+    expect(cleanPartial('أنا رحت ', gulf)).toBe('أنا رحت ')
   })
 
   it('يطبّع النص فلا يومض «انا» ثم «أنا» عند التثبيت', () => {
-    expect(cleanPartial('انا رحت', gulfBahraini)).toBe('أنا رحت')
+    expect(cleanPartial('انا رحت', gulf)).toBe('أنا رحت')
   })
 
   // «اه، السلام» ← حذف «اه» يترك فاصلة يتيمة تتصدّر النص الحي
   it('يقصّ علامة الترقيم اليتيمة التي خلّفها حذف الحشو', () => {
-    expect(cleanPartial('اه، السلام عليكم', gulfBahraini)).toBe('السلام عليكم')
+    expect(cleanPartial('اه، السلام عليكم', gulf)).toBe('السلام عليكم')
   })
 })
 
@@ -262,7 +303,7 @@ describe('cleanTranscript — تفريغ كامل', () => {
         ],
         durationMs: 4200,
       },
-      gulfBahraini,
+      gulf,
     )
 
     expect(result.segments).toHaveLength(2)
@@ -279,7 +320,7 @@ describe('cleanTranscript — تفريغ كامل', () => {
         words: [word('اه', 0, 300), word('أنا', 300, 600), word('رحت', 600, 900)],
         durationMs: 900,
       },
-      gulfBahraini,
+      gulf,
     )
     expect(result.segments[0]?.raw).toBe('اه أنا رحت')
     expect(result.segments[0]?.clean).toBe('أنا رحت')
@@ -292,19 +333,19 @@ describe('cleanTranscript — تفريغ كامل', () => {
         words: [word('اه', 0, 300), word('امم', 300, 700)],
         durationMs: 700,
       },
-      gulfBahraini,
+      gulf,
     )
     expect(result.segments).toHaveLength(0)
   })
 
   it('يتعامل مع تفريغ بلا طوابع زمنية', () => {
-    const result = cleanTranscript({ text: 'اه أنا رحت', words: [], durationMs: 900 }, gulfBahraini)
+    const result = cleanTranscript({ text: 'اه أنا رحت', words: [], durationMs: 900 }, gulf)
     expect(result.segments).toHaveLength(1)
     expect(result.segments[0]?.clean).toBe('أنا رحت')
   })
 
   it('يتعامل مع تفريغ فارغ تمامًا', () => {
-    const result = cleanTranscript({ text: '', words: [], durationMs: 0 }, gulfBahraini)
+    const result = cleanTranscript({ text: '', words: [], durationMs: 0 }, gulf)
     expect(result.segments).toHaveLength(0)
     expect(result.cleanText).toBe('')
   })
