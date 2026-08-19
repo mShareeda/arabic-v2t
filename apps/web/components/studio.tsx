@@ -8,14 +8,15 @@ import { LiveSession } from '@/lib/live-session'
 import { AmplitudeMeter } from './amplitude-meter'
 import { TranscriptView } from './transcript-view'
 import { TranscriptActions } from './transcript-actions'
+import { FileUpload } from './file-upload'
 
 type Status = 'idle' | 'connecting' | 'recording' | 'finishing' | 'done'
 
 /**
  * يطلب تذكرة قصيرة العمر للدخول إلى الـ gateway.
  *
- * يعيد null حين لا توجد جلسة — ويبقى ذلك صالحًا في وضع التطوير حيث تكون
- * المصادقة معطّلة على الـ gateway، فلا يُجبَر المطوّر على إنشاء حساب.
+ * يعيد null إن انتهت الجلسة بين تحميل الصفحة وبدء التسجيل؛ عندها يرفض
+ * الـ gateway الاتصال وتظهر رسالة «انتهت جلستك» بدل فشل صامت.
  */
 async function fetchGatewayTicket(): Promise<string | null> {
   try {
@@ -36,13 +37,8 @@ const STATUS_LABEL: Record<Status, string> = {
   done: 'انتهى',
 }
 
-export function Studio({
-  dialect,
-  isAuthenticated,
-}: {
-  dialect: DialectSummary
-  isAuthenticated: boolean
-}) {
+/** الصفحة محمية بالمصادقة، فالمستخدم هنا مسجّل دائمًا. */
+export function Studio({ dialect }: { dialect: DialectSummary }) {
   const [status, setStatus] = useState<Status>('idle')
   const [segments, setSegments] = useState<Segment[]>([])
   const [partial, setPartial] = useState('')
@@ -76,7 +72,7 @@ export function Studio({
   /** يحفظ التفريغ في سجل المستخدم بعد انتهاء الجلسة. */
   const persist = useCallback(
     async (durationMs: number): Promise<void> => {
-      if (!isAuthenticated || segmentsRef.current.length === 0) return
+      if (segmentsRef.current.length === 0) return
 
       try {
         const response = await fetch('/api/transcripts', {
@@ -97,7 +93,7 @@ export function Studio({
         setNotice('تعذّر حفظ التفريغ في السجل. يمكنك تنزيله من هنا.')
       }
     },
-    [dialect.id, isAuthenticated],
+    [dialect.id],
   )
 
   const start = useCallback(async () => {
@@ -235,6 +231,17 @@ export function Studio({
             {segments.length > 0 ? 'تسجيل جديد' : 'ابدأ التسجيل'}
           </button>
         )}
+
+        {!isRecording ? (
+          <FileUpload
+            dialect={dialect}
+            onResult={(uploaded) => {
+              segmentsRef.current = uploaded
+              setSegments(uploaded)
+              setStatus('done')
+            }}
+          />
+        ) : null}
 
         <TranscriptActions segments={segments} dialectLabel={dialect.label} />
 

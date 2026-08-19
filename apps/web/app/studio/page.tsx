@@ -14,8 +14,11 @@ export default async function StudioPage({
   // لهجة غير معروفة أو غائبة — نعيد المستخدم لشاشة الاختيار بدل عرض خطأ
   if (!dialect) redirect('/')
 
-  // التسجيل متاح بلا حساب؛ الحساب يضيف حفظ التفريغ في السجل فقط
+  // التسجيل والرفع كلاهما يستهلكان دقائق مدفوعة، والحصة محسوبة على المستخدم،
+  // فكلاهما يتطلب حسابًا. نعيد التوجيه هنا بدل ترك المستخدم يصطدم برفض
+  // من الـ gateway بعد أن يكون قد منح إذن الميكروفون.
   const user = await getSessionUser()
+  if (!user) redirect(`/login?next=/studio?dialect=${encodeURIComponent(dialect.id)}`)
 
-  return <Studio dialect={dialect} isAuthenticated={user !== null} />
+  return <Studio dialect={dialect} />
 }
