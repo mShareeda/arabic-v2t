@@ -1,0 +1,34 @@
+node_modules/
+dist/
+build/
+.next/
+out/
+coverage/
+
+.env
+.env.local
+.env.*.local
+!.env.example
+
+*.log
+npm-debug.log*
+pnpm-debug.log*
+
+.DS_Store
+.idea/
+.vscode/*
+!.vscode/extensions.json
+
+*.tsbuildinfo
+
+# uploaded audio for batch transcription (never committed)
+uploads/
+storage/
+
+# Prisma local database
+*.db
+*.db-journal
+
+# Playwright
+test-results/
+playwright-report/
