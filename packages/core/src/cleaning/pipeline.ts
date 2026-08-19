@@ -65,14 +65,20 @@ export function cleanText(
 /**
  * تنظيف سريع للنص الجزئي (partial) أثناء الكلام.
  *
- * يعمل عشرات المرات في الثانية أثناء التسجيل، فيقتصر على الخطوتين اللتين
- * يلاحظهما المستخدم فورًا: حذف الحشو وطيّ التكرار. لا تطبيع ولا ضبط ترقيم —
- * النص الجزئي غير مستقر أصلًا وسيُستبدل بعد أجزاء من الثانية.
+ * يعمل عشرات المرات في الثانية، فيتجنّب ضبط الترقيم الكامل. لكنه **يطبّع**
+ * النص رغم ذلك: التطبيع بضعة استبدالات رخيصة، وبدونه يظهر «انا» أثناء الكلام
+ * ثم يقفز إلى «أنا» عند التثبيت — وميض مزعج يلاحظه المستخدم في كل جملة.
+ *
+ * كما يقصّ علامات الترقيم اليتيمة في البداية، وهي أثر مباشر لحذف كلمة حشو
+ * كانت متبوعة بفاصلة («اه، السلام» ← «، السلام»).
  */
 export function cleanPartial(raw: string, dialect: DialectDefinition): string {
-  const { text } = stripFillers(raw, dialect)
+  const normalized = normalizeArabic(raw, dialect)
+  const { text } = stripFillers(normalized, dialect)
   const { text: collapsed } = collapseRepeats(text)
-  return collapsed.replace(/[ \t]{2,}/gu, ' ').trimStart()
+  return collapsed
+    .replace(/^[\s،؛,.…]+/u, '')
+    .replace(/[ \t]{2,}/gu, ' ')
 }
 
 export interface CleanedTranscript {
